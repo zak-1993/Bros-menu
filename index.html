@@ -373,7 +373,11 @@ footer p{margin:8px 0 0}
 
   /* ---- category rail ---- */
   function centerTab(t,smooth){
-    try{t.scrollIntoView({inline:'center',block:'nearest',behavior:smooth?'smooth':'auto'});}catch(e){}
+    /* scroll only the tab rail sideways; never touch the page's vertical scroll */
+    var rail=t.parentNode, r=rail.getBoundingClientRect(), b=t.getBoundingClientRect();
+    var delta=(b.left+b.width/2)-(r.left+r.width/2);
+    if(Math.abs(delta)<2)return;
+    try{rail.scrollBy({left:delta,behavior:smooth?'smooth':'instant'});}catch(e){rail.scrollLeft+=delta;}
   }
   function setActive(id){
     if(id===current)return;current=id;
